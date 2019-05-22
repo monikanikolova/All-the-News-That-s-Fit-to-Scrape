@@ -13,3 +13,17 @@
     background-color: #fea49f;
 }
 
+#bg-heading {
+    background-image: url("https://source.unsplash.com/1920x1080?newspaper");
+    height: 500px;
+}
+
+.caption {
+    font-size: 80px;
+    font-family: 'Libre Baskerville', serif;
+    color: antiquewhite;
+    text-shadow: 2px 2px #0c0101;
+
+}
+
+
