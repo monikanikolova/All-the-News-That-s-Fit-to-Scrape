@@ -1,0 +1,15 @@
+
+#navbarColor01 {
+    background-color:#101357;
+}
+
+.nav-item {
+    padding: 15px;
+    
+}
+
+.btn scrape-new,
+.btn clear {
+    background-color: #fea49f;
+}
+
