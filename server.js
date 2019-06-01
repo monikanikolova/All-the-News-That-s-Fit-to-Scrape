@@ -9,7 +9,7 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 
 // Require all models
-const db = require("./models");
+const db = require("./model");
 
 const PORT = 3000;
 
@@ -35,24 +35,35 @@ mongoose.connect(MONGODB_URI);
 // Routes
 
 // A GET route for scraping the echoJS website
-app.get("/scrape", function(req, res) {
+app.get("/scrape", (req, res) => {
   // First, we grab the body of the html with axios
   axios.get("https://www.wsj.com/").then((response) => {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
+    // console.log(response.data);
     const $ = cheerio.load(response.data);
+
 
     // Now, we grab every h2 within an article tag, and do the following:
     $("h3.wsj-headline").each((i, element) => {
       // Save an empty result object
+      
+      // console.log(i)
+      // console.log(element)
       const result = {};
 
+
       // Add the text and href of every link, and save them as properties of the result object
-      result.title = $(this)
+      result.headline = $(element)
         .children("a")
         .text();
-      result.link = $(this)
+      result.summary = $(element)
+        .children("a")
+        .text();
+      result.URL = $(element)
         .children("a")
         .attr("href");
+
+        console.log(result)
 
       // Create a new Article using the `result` object built from scraping
       db.Article.create(result)
@@ -90,7 +101,7 @@ app.get("/articles/:id", (req, res) => {
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
   db.Article.findOne({ _id: req.params.id })
     // ..and populate all of the notes associated with it
-    .populate("note")
+    .populate("comment")
     .then((dbArticle) => {
       // If we were able to successfully find an Article with the given id, send it back to the client
       res.json(dbArticle);
