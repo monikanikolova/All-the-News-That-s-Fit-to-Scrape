@@ -7,6 +7,8 @@ $.getJSON("/articles", function(data) {
   }
 });
 
+console.log("Hello");
+
 
 // Whenever someone clicks a p tag
 $(document).on("click", "p", function() {
