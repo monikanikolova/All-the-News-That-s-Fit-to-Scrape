@@ -1,15 +1,16 @@
+// Get all articles
 function getArticles() {
   $.getJSON("/articles", function (data) {
     for (var i = 0; i < data.length; i++) {
       $("#articles-display").append(
         `
-              <div class="card text-white bg-info mb-3"> 
-              <div class="card-header">
-              <h3 class="title">${data[i].title}</h3> 
-              <a class="link" href="${data[i].link}">View Full Article</a>
-              <button class=btn btn-secondary saveArticle data-id="${data[i]._id}">Save Article</button>
-              </div>
-              </div>
+        <div class="card text-white bg-info mb-3">
+        <div class="card-header">
+            <h3 class="title">${data[i].title}</h3>
+            <a class="link" href="${data[i].link}">View Full Article</a>
+            <button class="btn btn-secondary saveArticle data-id='${data[i]._id}'">Save Article</button>
+        </div>
+    </div>
           `
       );
 
@@ -17,6 +18,30 @@ function getArticles() {
   });
 }
 getArticles();
+
+// Attach click handler for SCRAPE NEW button
+$(".scrape-new").on("click", function() {
+  alert('You clicked!')
+
+  $("#articles-display").empty();
+
+  $.ajax({
+      method: "DELETE",
+      url: "/articles/deleteAll"
+  }).done(function() {
+      $.ajax({
+          method: "GET",
+          url: "/scrape"
+      }).done(function(data) {
+          console.log(data);
+          alert('You scraped!')
+          location.reload();
+      });
+
+  });
+
+});
+
 
 
 // Whenever someone clicks a p tag
