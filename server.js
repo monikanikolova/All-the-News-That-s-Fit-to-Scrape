@@ -1,17 +1,13 @@
 const express = require("express");
 const logger = require("morgan");
 const mongoose = require("mongoose");
-
-// Our scraping tools
-// Axios is a promised-based http library, similar to jQuery's Ajax method
-// It works on the client and on the server
 const axios = require("axios");
 const cheerio = require("cheerio");
 
 // Require all models
 const db = require("./model");
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Initialize Express
 const app = express();
@@ -34,7 +30,11 @@ mongoose.connect(MONGODB_URI);
 
 // Routes
 
-// A GET route for scraping the echoJS website
+app.get("/", function(req, res) {
+  res.json(path.join(__dirname, "/index.html"));
+});
+
+// A GET route for scraping the Wall street journal website
 app.get("/scrape", (req, res) => {
   // First, we grab the body of the html with axios
   axios.get("https://www.wsj.com/").then((response) => {
@@ -43,7 +43,7 @@ app.get("/scrape", (req, res) => {
     const $ = cheerio.load(response.data);
 
 
-    // Now, we grab every h2 within an article tag, and do the following:
+    // Now, we grab every h3 within an article tag, and do the following:
     $("h3.wsj-headline").each((i, element) => {
       // Save an empty result object
       
@@ -78,7 +78,8 @@ app.get("/scrape", (req, res) => {
     });
 
     // Send a message to the client
-    res.send("Scrape Complete");
+    res.redirect("/");
+    // res.send("Scrape Complete");
   });
 });
 
@@ -131,6 +132,38 @@ app.post("/articles/:id", function(req, res) {
       res.json(err);
     });
 });
+// save an article
+app.post('/save/:id', function(req, res) {
+  Article.findByIdAndUpdate(req.params.id, {
+      $set: { saved: true}
+      },
+      { new: true },
+      function(error, doc) {
+          if (error) {
+              console.log(error);
+              res.status(500);
+          } else {
+              res.redirect('/');
+          }
+      });
+});
+// get all saved articles
+app.get('/saved', function(req, res) {
+  Article
+      .find({})
+      .where('saved').equals(true)
+      .where('deleted').equals(false)
+      .populate('notes')
+      .exec(function(error, docs) {
+          if (error) {
+              console.log(error);
+              res.status(500);
+          } else {
+              res.status(200).json(docs);
+          }
+      });
+});
+
 
 // Start the server
 app.listen(PORT, function() {

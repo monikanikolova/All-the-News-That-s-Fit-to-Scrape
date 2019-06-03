@@ -21,6 +21,18 @@ var ArticleSchema = new Schema({
         type: String,
         required: true
     },
+     //Is the article saved or not
+    saved: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    //Is the article deleted or not
+    deleted: {
+        type: Boolean,
+        required: true,
+        default: false
+      },
 
     // `comment` is an object that stores a Comment id
     // The ref property links the ObjectId to the Comment model
