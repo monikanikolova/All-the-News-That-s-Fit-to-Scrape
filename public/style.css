@@ -30,6 +30,8 @@ body, html {
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;
+  margin-bottom: 20px;
+
 }
 
 /* Place text in the middle of the image */
@@ -46,7 +48,7 @@ body, html {
 
 #articles-display {
     width: 100%;
-    height: 500px;
+    height: auto;
     background-image: url("./image/funky-lines.png");
 }
 

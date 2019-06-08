@@ -1,14 +1,15 @@
 // Get all articles
 function getArticles() {
   $.getJSON("/articles", function (data) {
-    for (var i = 0; i < data.length; i++) {
+    for (var i = 10; i < data.length; i++) {
       $("#articles-display").append(
         `
         <div class="card text-white bg-info mb-3">
         <div class="card-header">
-            <h3 class="title">${data[i].title}</h3>
-            <a class="link" href="${data[i].link}">View Full Article</a>
-            <button class="btn btn-secondary saveArticle data-id='${data[i]._id}'">Save Article</button>
+            <h3 class="title">${data[i].headline}</h3>
+            <a class="link" href="${data[i].URL}">View Full Article</a>
+            <h4>${data[i].summary}</h4>
+            <button class="btn btn-secondary data-id='${data[i]._id}'" id="save-article">Save Article</button>
         </div>
     </div>
           `
@@ -21,7 +22,6 @@ getArticles();
 
 // Attach click handler for SCRAPE NEW button
 $(".scrape-new").on("click", function() {
-  alert('You clicked!')
 
   $("#articles-display").empty();
 
